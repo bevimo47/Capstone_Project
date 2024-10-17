@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base href="{{ url_for('dashboard') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TerraSteer Geosteering LLC - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+<div id="date-time" class="date-time"></div>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: white;
+            padding-top: 20px;
+        }
+        .sidebar .nav-link {
+            color: white;
+            padding: 10px 20px;
+        }
+        .sidebar .nav-link:hover {
+            background-color: #34495e;
+        }
+        .sidebar .nav-link i {
+            margin-right: 10px;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+            background-color: #ecf0f1;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo img {
+            width: 120px;
+            height: 120px;
+        }
+        .dashboard-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .dashboard-card h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        .dashboard-stat {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3498db;
+        }
+        .chart-container {
+            height: 300px;
+        }
+        /* New styles for the top navigation bar */
+        .top-nav {
+            background-color: #f8f9fa;
+            padding: 10px 0;
+        }
+        .top-nav .nav-link {
+            color: #2c3e50;
+        }
+        .top-nav .nav-link:hover {
+            color: #3498db;
+        }
+        .top-left-logo {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 100px;
+            height: auto;
+        }
+        .date-time {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 14px;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+<div id="date-time" class="date-time"></div>
+
+<div class="sidebar">
+    <div class="logo">
+        <img src="{{ url_for('static', filename='images/tsg_logo.jpg') }}" alt="TerraSteer logo">
+        <h4 class="mt-3" style="color: #FFD700;">TerraSteer Geosteering</h4>
+    </div>
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link active" href="{{ url_for('dashboard') }}">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('job_tracker') }}">
+                <i class="fas fa-tasks"></i> Job Tracker
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('data_analytics') }}">
+                <i class="fas fa-chart-bar"></i> Data Analytics
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('logistics') }}">
+                <i class="fas fa-truck"></i> Logistics
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('reports') }}">
+                <i class="fas fa-file-alt"></i> Reports
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('signin') }}">
+                <i class="fas fa-sign-in-alt"></i> Sign In
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="content">
+    <nav class="navbar navbar-expand-lg navbar-light top-nav mb-4">
+        <div class="container-fluid">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="#contact">Contact Us</a></li>
+                <li class="nav-item"><a class="nav-link" href="#about">About Us</a></li>
+                <li class="nav-item"><a class="nav-link" href="#login">Log in</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <h1 class="mb-4">Dashboard</h1>
+
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="dashboard-card">
+                <h3>Latest Oil and Gas News</h3>
+                <ul class="list-group" id="news-list">
+                    <li class="list-group-item">
+                        <a href="https://www.upstreamonline.com/environment/nigerian-communities-succeed-in-landmark-appeal-in-long-running-oil-pollution-case-against-shell/2-1-1723732" target="_blank">
+                            <img src="/Users/Victor/PycharmProjects/Capstone_Project/Evironment.jpeg" alt="Environment" class="news-image">
+                            <span>Environment</span>
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="https://www.upstreamonline.com/rigs-and-vessels/oslo-listed-driller-secures-234-million-contracts-for-africa-operations/2-1-1722961" target="_blank">
+                            <img src="/Users/Victor/PycharmProjects/Capstone_Project/Rig and Vessels.jpeg" alt="Rig and Vessels" class="news-image">
+                            <span>Rig and Vessels</span>
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="https://www.upstreamonline.com/field-development/nigeria-targets-production-boost-at-mature-assets-contract-award-lined-up/2-1-1721782" target="_blank">
+                            <img src="/Users/Victor/PycharmProjects/Capstone_Project/Field Development.jpeg" alt="Field Development" class="news-image">
+                            <span>Field Development</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // Function to update date and time
+    function updateDateTime() {
+        const now = new Date();
+        const dateTimeString = now.toLocaleString();
+        document.getElementById('date-time').textContent = dateTimeString;
+    }
+
+    // Call the functions when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchLatestNews();
+        updateDateTime();
+        setInterval(updateDateTime, 1000); // Update time every second
+    });
+    </script>
+</div>
+<script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+</body>
+</html>

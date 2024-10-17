@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base href="{{ url_for('dashboard') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TerraSteer Geosteering LLC - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: white;
+            padding-top: 20px;
+        }
+        .sidebar .nav-link {
+            color: white;
+            padding: 10px 20px;
+        }
+        .sidebar .nav-link:hover {
+            background-color: #34495e;
+        }
+        .sidebar .nav-link i {
+            margin-right: 10px;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+            background-color: #ecf0f1;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo img {
+            width: 120px;
+            height: 120px;
+        }
+        .chart-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .nav-tabs .nav-link {
+            color: #2c3e50;
+        }
+        .nav-tabs .nav-link.active {
+            font-weight: bold;
+        }
+        .tab-content {
+            padding-top: 20px;
+        }
+        .data-export-btn {
+            margin-top: 20px;
+        }
+        .job-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .job-item {
+            cursor: pointer;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .job-item:hover {
+            background-color: #f5f5f5;
+        }
+        .job-details {
+            display: none;
+        }
+    </style>
+    </head>
+    <body>
+        <div class="sidebar">
+            <div class="logo">
+                <img src="tsg_logo.jpg" alt="TerraSteer logo" width="120" height="120">
+                <h2 class="mt-3" style="color: #FFD700;">TerraSteer Geosteering</h2>
+            </div>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ url_for('dashboard') }}">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('job_tracker') }}">
+                        <i class="fas fa-tasks"></i> Job Tracker
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('data_analytics') }}">
+                        <i class="fas fa-chart-bar"></i> Data Analytics
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logistics') }}">
+                        <i class="fas fa-truck"></i> Logistics
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('reports') }}">
+                        <i class="fas fa-file-alt"></i> Reports
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('signin') }}">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="content">
+            <nav class="navbar navbar-expand-lg navbar-light top-nav mb-4">
+                <div class="container-fluid">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" href="#contact">Contact Us</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#about">About Us</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('signin') }}">Sign In</a></li>
+                    </ul>
+                </div>
+            </nav>
+    
+    <div class="content">
+        <h1 class="mb-4">Job Tracker</h1>
+        
+        <ul class="nav nav-tabs" id="jobTrackerTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab" aria-controls="overview" aria-selected="true">Overview</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="product-cost-tab" data-bs-toggle="tab" data-bs-target="#product-cost" type="button" role="tab" aria-controls="product-cost" aria-selected="false">Product Cost</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="personnel-tracker-tab" data-bs-toggle="tab" data-bs-target="#personnel-tracker" type="button" role="tab" aria-controls="personnel-tracker" aria-selected="false">Personnel Tracker</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="personnel-ops-schedule-tab" data-bs-toggle="tab" data-bs-target="#personnel-ops-schedule" type="button" role="tab" aria-controls="personnel-ops-schedule" aria-selected="false">Personnel Ops Schedule</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="equipment-tracker-tab" data-bs-toggle="tab" data-bs-target="#equipment-tracker" type="button" role="tab" aria-controls="equipment-tracker" aria-selected="false">Equipment Tracker</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="equipment-ops-schedule-tab" data-bs-toggle="tab" data-bs-target="#equipment-ops-schedule" type="button" role="tab" aria-controls="equipment-ops-schedule" aria-selected="false">Equipment Ops Schedule</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="job-schedule-tab" data-bs-toggle="tab" data-bs-target="#job-schedule" type="button" role="tab" aria-controls="job-schedule" aria-selected="false">Job Schedule</button>
+            </li>
+        </ul>
+    
+        <div class="tab-content" id="jobTrackerTabContent">
+            <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="chart-container">
+                            <h3>Job List</h3>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="Search jobs..." id="jobSearch">
+                                <button class="btn btn-outline-secondary" type="button" id="searchBtn"><i class="fas fa-search"></i></button>
+                            </div>
+                            <div class="job-list" id="jobList">
+                                <!-- Job items will be dynamically added here -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="chart-container">
+                            <h3>Job Details</h3>
+                            <div id="jobDetails" class="job-details">
+                                <!-- Job details will be displayed here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="chart-container">
+                            <h3>Job Progress</h3>
+                            <canvas id="jobProgressChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="chart-container">
+                            <h3>Resource Allocation</h3>
+                            <canvas id="resourceAllocationChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="tab-pane fade" id="product-cost" role="tabpanel" aria-labelledby="product-cost-tab">
+                <h3>Product Cost</h3>
+                <p>Product cost analysis and breakdown will be displayed here.</p>
+                <!-- Add product cost content here -->
+            </div>
+    
+            <div class="tab-pane fade" id="personnel-tracker" role="tabpanel" aria-labelledby="personnel-tracker-tab">
+                <h3>Personnel Tracker</h3>
+                <p>Personnel tracking and management information will be shown here.</p>
+                <!-- Add personnel tracker content here -->
+            </div>
+    
+            <div class="tab-pane fade" id="personnel-ops-schedule" role="tabpanel" aria-labelledby="personnel-ops-schedule-tab">
+                <h3>Personnel Operations Schedule</h3>
+                <p>Personnel operations schedule and planning details will be displayed here.</p>
+                <!-- Add personnel operations schedule content here -->
+            </div>
+    
+            <div class="tab-pane fade" id="equipment-tracker" role="tabpanel" aria-labelledby="equipment-tracker-tab">
+                <h3>Equipment Tracker</h3>
+                <p>Equipment tracking and management information will be shown here.</p>
+                <!-- Add equipment tracker content here -->
+            </div>
+    
+            <div class="tab-pane fade" id="equipment-ops-schedule" role="tabpanel" aria-labelledby="equipment-ops-schedule-tab">
+                <h3>Equipment Operations Schedule</h3>
+                <p>Equipment operations schedule and planning details will be displayed here.</p>
+                <!-- Add equipment operations schedule content here -->
+            </div>
+    
+            <div class="tab-pane fade" id="job-schedule" role="tabpanel" aria-labelledby="job-schedule-tab">
+                <h3>Job Schedule</h3>
+                <p>Overall job scheduling and timeline information will be shown here.</p>
+                <!-- Add job schedule content here -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+    // Sample job data
+    const jobs = [
+        { id: 1, name: "Well A-123", client: "EnerCo", status: "In Progress", progress: 65, startDate: "2023-05-01", endDate: "2023-06-15" },
+        { id: 2, name: "Well B-456", client: "PetroTech", status: "Completed", progress: 100, startDate: "2023-04-15", endDate: "2023-05-30" },
+        { id: 3, name: "Well C-789", client: "GeoFuel", status: "Planned", progress: 0, startDate: "2023-06-10", endDate: "2023-07-25" },
+        { id: 4, name: "Well D-101", client: "EnerCo", status: "In Progress", progress: 30, startDate: "2023-05-20", endDate: "2023-07-05" },
+        { id: 5, name: "Well E-202", client: "PetroTech", status: "In Progress", progress: 80, startDate: "2023-04-01", endDate: "2023-05-15" }
+    ];
+    
+    // Populate job list
+    function populateJobList(jobs) {
+        const jobList = document.getElementById('jobList');
+        jobList.innerHTML = '';
+        jobs.forEach(job => {
+            const jobItem = document.createElement('div');
+            jobItem.className = 'job-item';
+            jobItem.innerHTML = `
+                <strong>${job.name}</strong><br>
+                Client: ${job.client}<br>
+                Status: ${job.status}
+            `;
+            jobItem.onclick = () => showJobDetails(job);
+            jobList.appendChild(jobItem);
+        });
+    }
+    
+    // Show job details
+    function showJobDetails(job) {
+        const jobDetails = document.getElementById('jobDetails');
+        jobDetails.style.display = 'block';
+        jobDetails.innerHTML = `
+            <h4>${job.name}</h4>
+            <p><strong>Client:</strong> ${job.client}</p>
+            <p><strong>Status:</strong> ${job.status}</p>
+            <p><strong>Progress:</strong> ${job.progress}%</p>
+            <p><strong>Start Date:</strong> ${job.startDate}</p>
+            <p><strong>End Date:</strong> ${job.endDate}</p>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: ${job.progress}%;" aria-valuenow="${job.progress}" aria-valuemin="0" aria-valuemax="100">${job.progress}%</div>
+            </div>
+        `;
+    }
+    
+    // Initialize job list
+    populateJobList(jobs);
+    
+    // Job Progress Chart
+    var jobProgressCtx = document.getElementById('jobProgressChart').getContext('2d');
+    var jobProgressChart = new Chart(jobProgressCtx, {
+        type: 'bar',
+        data: {
+            labels: jobs.map(job => job.name),
+            datasets: [{
+                label: 'Job Progress',
+                data: jobs.map(job => job.progress),
+                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100
+                }
+            }
+        }
+    });
+    
+    // Resource Allocation Chart
+    var resourceAllocationCtx = document.getElementById('resourceAllocationChart').getContext('2d');
+    var resourceAllocationChart = new Chart(resourceAllocationCtx, {
+        type: 'pie',
+        data: {
+            labels: ['Equipment', 'Personnel', 'Materials', 'Other'],
+            datasets: [{
+                data: [30, 40, 20, 10],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)'
+                ]
+            }]
+        }
+    });
+    
+    // Search functionality
+    document.getElementById('searchBtn').addEventListener('click', function() {
+        const searchTerm = document.getElementById('jobSearch').value.toLowerCase();
+        const filteredJobs = jobs.filter(job => 
+            job.name.toLowerCase().includes(searchTerm) || 
+            job.client.toLowerCase().includes(searchTerm) ||
+            job.status.toLowerCase().includes(searchTerm)
+        );
+        populateJobList(filteredJobs);
+    });
+    
+    // Job search input
+    document.getElementById('jobSearch').addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') {
+            document.getElementById('searchBtn').click();
+        }
+    });
+    </script>
+    
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+</body>
+</html>

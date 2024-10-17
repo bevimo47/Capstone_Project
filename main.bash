@@ -1,0 +1,9 @@
+/flask_dashboard
+    /static
+        /css
+            style.css
+        /js
+            chart.js
+    /templates
+        dashboard.html
+    app.py
