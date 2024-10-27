@@ -203,40 +203,113 @@
                 </div>
             </div>
     
-            <div class="tab-pane fade" id="product-cost" role="tabpanel" aria-labelledby="product-cost-tab">
+            <div class="tab-pane fade" id="product_cost" role="tabpanel" aria-labelledby="product-cost-tab">
                 <h3>Product Cost</h3>
-                <p>Product cost analysis and breakdown will be displayed here.</p>
-                <!-- Add product cost content here -->
+                <table class="table table-striped" id="productCostTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Column1</th>
+                            <th>Column2</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Rows will be populated here -->
+                    </tbody>
+                </table>
+                <button class="btn btn-primary" onclick="openAddModal('product_cost')">Add New Entry</button>
             </div>
     
-            <div class="tab-pane fade" id="personnel-tracker" role="tabpanel" aria-labelledby="personnel-tracker-tab">
+            <div class="tab-pane fade" id="personnel_tracker" role="tabpanel" aria-labelledby="personnel-tracker">
                 <h3>Personnel Tracker</h3>
-                <p>Personnel tracking and management information will be shown here.</p>
-                <!-- Add personnel tracker content here -->
+                <table class="table table-striped" id="productCostTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Column1</th>
+                            <th>Column2</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Rows will be populated here -->
+                    </tbody>
+                </table>
+                <button class="btn btn-primary" onclick="openAddModal('personnel_tracker')">Add New Entry</button>
             </div>
     
-            <div class="tab-pane fade" id="personnel-ops-schedule" role="tabpanel" aria-labelledby="personnel-ops-schedule-tab">
-                <h3>Personnel Operations Schedule</h3>
-                <p>Personnel operations schedule and planning details will be displayed here.</p>
-                <!-- Add personnel operations schedule content here -->
+            <div class="tab-pane fade" id="personnel_schedule" role="tabpanel" aria-labelledby="personnel-ops-schedule-tab">
+                <h3>Personnel Schedule</h3>
+                <table class="table table-striped" id="personnelScheduleTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Personnel Name</th>
+                            <th>Schedule Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Rows will be populated here -->
+                    </tbody>
+                </table>
+                <button class="btn btn-primary" onclick="openAddModal('personnel_schedule')">Add New Entry</button>
             </div>
-    
-            <div class="tab-pane fade" id="equipment-tracker" role="tabpanel" aria-labelledby="equipment-tracker-tab">
+            
+            <div class="tab-pane fade" id="equipment_tracker" role="tabpanel" aria-labelledby="equipment-tracker-tab">
                 <h3>Equipment Tracker</h3>
-                <p>Equipment tracking and management information will be shown here.</p>
-                <!-- Add equipment tracker content here -->
+                <table class="table table-striped" id="equipmentTrackerTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Equipment Name</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Rows will be populated here -->
+                    </tbody>
+                </table>
+                <button class="btn btn-primary" onclick="openAddModal('equipment_tracker')">Add New Entry</button>
             </div>
-    
-            <div class="tab-pane fade" id="equipment-ops-schedule" role="tabpanel" aria-labelledby="equipment-ops-schedule-tab">
+            
+            <div class="tab-pane fade" id="equipment_schedule" role="tabpanel" aria-labelledby="equipment-ops-schedule-tab">
                 <h3>Equipment Operations Schedule</h3>
-                <p>Equipment operations schedule and planning details will be displayed here.</p>
-                <!-- Add equipment operations schedule content here -->
+                <table class="table table-striped" id="equipmentScheduleTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Equipment Name</th>
+                            <th>Scheduled Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Rows will be populated here -->
+                    </tbody>
+                </table>
+                <button class="btn btn-primary" onclick="openAddModal('equipment_schedule')">Add New Entry</button>
             </div>
-    
-            <div class="tab-pane fade" id="job-schedule" role="tabpanel" aria-labelledby="job-schedule-tab">
+            
+            <div class="tab-pane fade" id="job_schedule" role="tabpanel" aria-labelledby="job-schedule-tab">
                 <h3>Job Schedule</h3>
-                <p>Overall job scheduling and timeline information will be shown here.</p>
-                <!-- Add job schedule content here -->
+                <table class="table table-striped" id="jobScheduleTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Job Name</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Rows will be populated here -->
+                    </tbody>
+                </table>
+                <button class="btn btn-primary" onclick="openAddModal('job_schedule')">Add New Entry</button>
             </div>
         </div>
     </div>
@@ -244,11 +317,11 @@
     <script>
     // Sample job data
     const jobs = [
-        { id: 1, name: "Well A-123", client: "EnerCo", status: "In Progress", progress: 65, startDate: "2023-05-01", endDate: "2023-06-15" },
+        { id: 1, name: "Well A-123", client: "TerreSteer", status: "In Progress", progress: 65, startDate: "2023-05-01", endDate: "2023-06-15" },
         { id: 2, name: "Well B-456", client: "PetroTech", status: "Completed", progress: 100, startDate: "2023-04-15", endDate: "2023-05-30" },
         { id: 3, name: "Well C-789", client: "GeoFuel", status: "Planned", progress: 0, startDate: "2023-06-10", endDate: "2023-07-25" },
-        { id: 4, name: "Well D-101", client: "EnerCo", status: "In Progress", progress: 30, startDate: "2023-05-20", endDate: "2023-07-05" },
-        { id: 5, name: "Well E-202", client: "PetroTech", status: "In Progress", progress: 80, startDate: "2023-04-01", endDate: "2023-05-15" }
+        { id: 4, name: "Well D-101", client: "TereSteer", status: "In Progress", progress: 30, startDate: "2023-05-20", endDate: "2023-07-05" },
+        { id: 5, name: "Well E-202", client: "TerreSteer", status: "In Progress", progress: 80, startDate: "2023-04-01", endDate: "2023-05-15" }
     ];
     
     // Populate job list
@@ -348,7 +421,8 @@
         }
     });
     </script>
-    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='js/dataHandler.js') }}"></script>
     <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
 </body>
 </html>
